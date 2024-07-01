@@ -17,23 +17,19 @@ Output: [1]
 */
 
 var topKFrequent = function (nums, k) {
-    let obj = {};
-
+    let map = new Map();
     for (const val of nums) {
-        obj[val] = (obj[val] | 0) + 1;
+        map.has(val) ? map.set(val, map.get(val) + 1) : map.set(val, 1);
     }
-    if (Object.keys(obj).length <= 2) {
-        return Object.keys(obj).map((val) => Number(val));
+    if (map.size <= k) {
+        return Array.from(map.keys()).map((val) => Number(val));
     }
-    let newArr = new Set();
-    for (let val of nums) {
-        if (obj[val] >= k) {
-            newArr.add(val);
-        }
-    }
-    return [...newArr];
+
+    const mapSort = new Map([...map.entries()].sort((a, b) => b[1] - a[1]));
+    const mapSortArr = [...mapSort.keys()];
+    return mapSortArr.slice(0, k);
 };
 
-let nums = [1, 2, 1],
+let nums = [1, 1, 1, 2, 2, 3],
     k = 2;
 console.log(topKFrequent(nums, k));
